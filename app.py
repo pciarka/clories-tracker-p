@@ -79,16 +79,16 @@ def main():
 
 
     # welcome to log user
-if st.session_state.usr_id is not None:
-    connection=connect_to_db()  
-    username = return_reqest(connection, f"SELECT username FROM users WHERE id = {st.session_state.usr_id}")
-    st.markdown(f"### Welcome, {username[0][0]}")
+    if st.session_state.usr_id is not None:
+        connection=connect_to_db()  
+        username = return_reqest(connection, f"SELECT username FROM users WHERE id = {st.session_state.usr_id}")
+        st.markdown(f"### Welcome, {username[0][0]}")
 
-    Meals, Today=st.tabs(["Add meal", "Today data"])
+        Meals, Today=st.tabs(["Add meal", "Today data"])
      
-    with Today:
-        # calories progress bars
-        # if st.session_state.usr_id is not None:
+        with Today:
+            # calories progress bars
+            # if st.session_state.usr_id is not None:
             # username = return_reqest(connection, f"SELECT username FROM users WHERE id = {st.session_state.usr_id}")
             # st.markdown(f"### Welcome, {username[0][0]}")
             st.write("Here is your calories and macro for today")
@@ -120,7 +120,7 @@ if st.session_state.usr_id is not None:
             custom_progress_bar(st.session_state.usr_intake.fiber, daily_goals[4], 
                                 f"{st.session_state.usr_intake.fiber} / {int(daily_goals[4])} g")
        
-    with Meals:
+        with Meals:
         # if st.session_state.usr_id is not None:
             # adding meals from photo
             option = st.selectbox("Choose an option", ("Take a picture from camera", "Upload a photo" ))
