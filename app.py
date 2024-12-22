@@ -4,6 +4,7 @@ from login_screen import login
 from ai_func import fill_meal, Meal
 import tempfile
 
+st.set_page_config(initial_sidebar_state="expanded", page_title="Calories Tracker")
 
 class CalorieAndMacroToday:
     calories: int
@@ -49,7 +50,7 @@ def fill_calories_today(connection, usr_id,class_calories):
 
 
 def main():
-    st.set_page_config(page_title="Calories Tracker")
+
     #general session state variables
     if 'usr_intake' not in st.session_state:
         st.session_state.usr_intake = empty_calories_today()
@@ -77,16 +78,19 @@ def main():
 
 
 
-    # calories progress bars
+    # welcome to log user
+if st.session_state.usr_id is not None:
+    connection=connect_to_db()  
+    username = return_reqest(connection, f"SELECT username FROM users WHERE id = {st.session_state.usr_id}")
+    st.markdown(f"### Welcome, {username[0][0]}")
 
-        
     Meals, Today=st.tabs(["Add meal", "Today data"])
      
     with Today:
-
-        if st.session_state.usr_id is not None:
-            username = return_reqest(connection, f"SELECT username FROM users WHERE id = {st.session_state.usr_id}")
-            st.markdown(f"### Welcome, {username[0][0]}")
+        # calories progress bars
+        # if st.session_state.usr_id is not None:
+            # username = return_reqest(connection, f"SELECT username FROM users WHERE id = {st.session_state.usr_id}")
+            # st.markdown(f"### Welcome, {username[0][0]}")
             st.write("Here is your calories and macro for today")
         
             results = return_reqest(connection, f"SELECT daily_calories, daily_protein, daily_carbs, daily_fats, daily_fiber FROM users WHERE id = {st.session_state.usr_id}")
@@ -117,6 +121,7 @@ def main():
                                 f"{st.session_state.usr_intake.fiber} / {int(daily_goals[4])} g")
        
     with Meals:
+        # if st.session_state.usr_id is not None:
             # adding meals from photo
             option = st.selectbox("Choose an option", ("Take a picture from camera", "Upload a photo" ))
             image = None
