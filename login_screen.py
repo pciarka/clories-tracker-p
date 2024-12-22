@@ -1,10 +1,11 @@
 from database import connect_to_db, db_login, return_reqest, db_login_email
 import streamlit as st
 from st_paywall import add_auth  # type: ignore
+import streamlit.components.v1 as components
 
 def login():
-    login_screen_g()
-    login_screen()
+    login_screen_g2()
+    # login_screen()
     return st.session_state.usr_id
 
 def login_screen():
@@ -49,9 +50,42 @@ def login_screen_g():
         if db_login_email(connect_to_db(), st.session_state.email): 
             st.success("User exist!") 
             st.query_params.update(logged_in=True)
-        #else: 
+#force close sidebar by js
+            components.html( """ 
+                            <script> const streamlitWindow = window.parent.document; 
+                            const toggleButton = streamlitWindow.querySelector('.stToggleSidebarButton'); 
+                            if (toggleButton) { toggleButton.click(); } </script> """, height=0, )
         
         return st.session_state.usr_id
+
+def login_screen_g2():
+     # Domyślnie rozwinięty sidebar
+    # st.sidebar.checkbox('Menu', value=True)
+    # with st.sidebar: 
+        # st.markdown('### Login by Google')
     
+        try:
+            add_auth(
+            required=False,
+            login_sidebar=True,
+            login_button_text="Log by Google",
+            
+
+            )
+      
+        
+        except KeyError:
+            pass
+
+        
+        if st.session_state.get('email'):
+            # st.markdown(f"You logged by: {st.session_state['email']}")
+            
+            if db_login_email(connect_to_db(), st.session_state.email): 
+            # st.success("User exist!") 
+                st.query_params.update(logged_in=True)
+
+        
+        return st.session_state.usr_id
 
     
