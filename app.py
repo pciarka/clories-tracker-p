@@ -78,21 +78,22 @@ def main():
 
 
     # calories progress bars
-    if st.session_state.usr_id is not None:
-        username = return_reqest(connection, f"SELECT username FROM users WHERE id = {st.session_state.usr_id}")
-        st.markdown(f"### Welcome, {username[0][0]}")
-        st.write("Here is your calories and macro for today")
-        
-        results = return_reqest(connection, f"SELECT daily_calories, daily_protein, daily_carbs, daily_fats, daily_fiber FROM users WHERE id = {st.session_state.usr_id}")
-        daily_goals = results[0]
-        
-        st.session_state.usr_intake=empty_calories_today()
-        st.session_state.usr_intake = fill_calories_today(connection, st.session_state.usr_id, st.session_state.usr_intake)
+
         
     Meals, Today=st.tabs(["Add meal", "Today data"])
      
     with Today:
-       
+
+        if st.session_state.usr_id is not None:
+            username = return_reqest(connection, f"SELECT username FROM users WHERE id = {st.session_state.usr_id}")
+            st.markdown(f"### Welcome, {username[0][0]}")
+            st.write("Here is your calories and macro for today")
+        
+            results = return_reqest(connection, f"SELECT daily_calories, daily_protein, daily_carbs, daily_fats, daily_fiber FROM users WHERE id = {st.session_state.usr_id}")
+            daily_goals = results[0]
+        
+            st.session_state.usr_intake=empty_calories_today()
+            st.session_state.usr_intake = fill_calories_today(connection, st.session_state.usr_id, st.session_state.usr_intake)  
         
         
             st.write("Calories Intake")
