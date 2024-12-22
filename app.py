@@ -89,7 +89,7 @@ def main():
         st.session_state.usr_intake=empty_calories_today()
         st.session_state.usr_intake = fill_calories_today(connection, st.session_state.usr_id, st.session_state.usr_intake)
         
-    Meal, Today=st.tabs(["Add meal", "Today data"])
+    Meals, Today=st.tabs(["Add meal", "Today data"])
      
     with Today:
        
@@ -115,7 +115,7 @@ def main():
             custom_progress_bar(st.session_state.usr_intake.fiber, daily_goals[4], 
                                 f"{st.session_state.usr_intake.fiber} / {int(daily_goals[4])} g")
        
-    with Meal:
+    with Meals:
             # adding meals from photo
             option = st.selectbox("Choose an option", ("Take a picture from camera", "Upload a photo" ))
             image = None
