@@ -61,8 +61,6 @@ def main():
     if st.session_state.usr_id is None:
        st.session_state.usr_id = login()
 
-
-
     if st.session_state.usr_id is not None:
         connection=connect_to_db()
         
