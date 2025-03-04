@@ -3,9 +3,8 @@ from openai import OpenAI
 import base64
 import instructor
 from pydantic import BaseModel
-from dotenv import dotenv_values
 import streamlit as st
-
+import os
 
 class Meal(BaseModel):
     name: str
@@ -15,16 +14,23 @@ class Meal(BaseModel):
     fats: int
     fiber: int
 
+def get_secret(secret_name):
+    secret_path = f"/run/secrets/{secret_name}"
+    if os.path.exists(secret_path):
+        with open(secret_path, "r") as f:
+            return f.read().strip()
+    # Fallback, np. przy lokalnym uruchamianiu poza Docker Swarm
+    return st.session_state.get(secret_name)
+
 @st.cache_resource
 def get_openai_client():
-    env = dotenv_values(".env")
-    key=st.session_state.get("openai_api_key")
+    key=get_secret("OPENAI_API_KEY")
     return OpenAI(api_key=key)
 
 def openAI_response(image):
     
 
-    openai_client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+    openai_client = OpenAI(api_key=get_secret("OPENAI_API_KEY"))
     instructor_openai_client = instructor.from_openai(openai_client)
     
     meal = instructor_openai_client.chat.completions.create(
