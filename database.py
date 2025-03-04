@@ -1,20 +1,19 @@
 import mysql.connector
 from mysql.connector import Error
-from dotenv import dotenv_values
 from typing import Any
 import streamlit as st
-
+from ai_func import get_secret
 #establish connection, if None is returned, connection failed
 def connect_to_db():
 
     try:
         connection = mysql.connector.connect(
-        host=st.secrets['DB_HOST'],        
-        user=st.secrets['DB_USER'],        
-        password=st.secrets['DB_PASS'],        
-        database=st.secrets['DB_NAME'],
-        port=st.secrets['DB_PORT'],      
-        auth_plugin=st.secrets['DB_AUTH_PLUGIN']
+        host=get_secret('DB_HOST'),        
+        user=get_secret('DB_USER'),        
+        password=get_secret('DB_PASS'),        
+        database=get_secret('DB_NAME'),
+        port=get_secret('DB_PORT'),      
+        auth_plugin=get_secret('DB_AUTH_PLUGIN')
     )
         
         if connection.is_connected():
