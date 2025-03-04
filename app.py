@@ -23,7 +23,6 @@ def empty_calories_today():
     return temp   
 
 
-
 def custom_progress_bar(current, goal, label):
     goal = max(goal, 1)
     percentage = min(current / goal, 1)  # Cap percentage at 1 (100%)
@@ -140,7 +139,7 @@ def main():
                     tmp_file_path = tmp_file.name
 
             # Pass the file path to the fill_meal function
-                st.session_state.cur_meal = fill_meal(tmp_file_path, db_user_goal(connection, st.session_state.usr_id), connection)
+                st.session_state.cur_meal = fill_meal(tmp_file_path, db_user_goal(connection, st.session_state.usr_id))
             
                 
             #manually adding meals

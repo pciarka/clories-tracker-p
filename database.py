@@ -2,21 +2,21 @@ import mysql.connector
 from mysql.connector import Error
 from typing import Any
 import streamlit as st
-from ai_func import get_secret
+
 #establish connection, if None is returned, connection failed
 def connect_to_db():
 
     try:
         connection = mysql.connector.connect(
-        host=get_secret('DB_HOST'),        
-        user=get_secret('DB_USER'),        
-        password=get_secret('DB_PASS'),        
-        database=get_secret('DB_NAME'),
-        port=get_secret('DB_PORT'),      
-        auth_plugin=get_secret('DB_AUTH_PLUGIN')
+        host=st.secrets['DB_HOST'],        
+        user=st.secrets['DB_USER'],        
+        password=st.secrets['DB_PASS'],        
+        database=st.secrets['DB_NAME'],   
+        auth_plugin=st.secrets['DB_AUTH_PLUGIN']
     )
         
         if connection.is_connected():
+            print("CONNECTED")
             return connection
         
     except Error as e:
@@ -24,7 +24,7 @@ def connect_to_db():
         return None
 
 def return_reqest(connection: Any,query: str):
-    cursor = connection.cursor()
+    cursor = connection.cursor(buffered=True)
     cursor.execute(query)
     results = cursor.fetchall()
     cursor.close()
@@ -54,7 +54,7 @@ def db_login_email(connection: Any, email: str):
     
     
 def collect_user_data_gmail():
-    st.header("Write some data please") 
+    st.header("Please fill your data") 
     with st.form("user_data_form"):
     
         goal = st.selectbox("Goal", ["lose", "gain"])
@@ -66,10 +66,8 @@ def collect_user_data_gmail():
         daily_fats = st.number_input("Daily fats", min_value=0)
         daily_fiber = st.number_input("Daily fiber", min_value=0)
   
-        submitted = st.form_submit_button("Save data ")
+        submitted = st.form_submit_button("Save data")
 
-            
-        
         # Validation and save
         if submitted:
             # Podstawowa walidacja
@@ -78,9 +76,11 @@ def collect_user_data_gmail():
                 return None
             
             else:
-                add_usr(connect_to_db(), st.session_state.email, st.session_state.email, goal, weight, body_fat, daily_calories, daily_protein, daily_carbs, daily_fats, daily_fiber )
+                connection=connect_to_db()
+                add_usr(connection, st.session_state.email, st.session_state.email, goal, weight, body_fat, daily_calories, daily_protein, daily_carbs, daily_fats, daily_fiber )
                 st.success("Success, we are starting! ✅")
                 st.rerun()
+                disconnect(connection)
 
 
 def add_meal(connection: Any, usr_id: int, meal_name: str, calories: int, protein: int, carbs: int, fats: int, fiber: int):
@@ -98,6 +98,7 @@ def add_usr(connection: Any, email: str, username: str, goal: str, weight: int, 
     
 #void disconnect 
 def disconnect(connection:any):
+    print("DISCONNECTED")
     connection.close()
    
 def create_user(connection: Any, username: str, password: str, daily_calories: int, daily_protein: int, daily_carbs: int, daily_fats: int, daily_fiber: int):

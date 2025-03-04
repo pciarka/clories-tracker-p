@@ -1,0 +1,55 @@
+version: '3.1'
+services:
+  web:
+    image: tracker
+    ports:
+      - "8502:8502"
+    secrets:
+      - OPENAI_API_KEY
+      - DB_HOST
+      - DB_USER
+      - DB_PASS
+      - DB_NAME
+      - DB_PORT
+      - DB_AUTH_PLUGIN
+      - payment_provider
+      - bmac_API_key
+      - bmac_link
+      - testing_mode
+      - client_id
+      - client_secret
+      - redirect_url
+      - redirect_url_test
+
+secrets:
+  OPENAI_API_KEY:
+    external: true
+  DB_HOST:
+    external: true
+  DB_USER:
+    external: true
+  DB_PASS:
+    external: true
+  DB_NAME:
+    external: true
+  DB_PORT:
+    external: true
+  DB_AUTH_PLUGIN:
+    external: true
+  payment_provider:
+    external: true
+  bmac_API_key:
+    external: true
+  bmac_link:
+    external: true
+  testing_mode:
+    external: true
+  client_id:
+    external: true
+  client_secret:
+    external: true
+  redirect_url:
+    external: true
+  redirect_url_test:
+    external: true
+  

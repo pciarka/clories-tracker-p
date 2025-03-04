@@ -5,4 +5,6 @@ __*
 *.ipynb
 .streamlit/
 test/
+.secrets
+
 
